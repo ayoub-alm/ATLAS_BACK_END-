@@ -31,7 +31,7 @@ public class VolunteerController  {
 
     @GetMapping("/{volunteerId}")
     ResponseEntity<Volunteer> getVolunteerById(@PathVariable Long volunteerId){
-        return ResponseEntity.ok(volunteerService.getVolunteerById(volunteerId));
+        return ResponseEntity.ok(volunteerService.getVolunteerById(volunteerId  ));
     }
 
     // Endpoint to create a new volunteer
