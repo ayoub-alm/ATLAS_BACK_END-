@@ -1,8 +1,9 @@
 package com.fnsm.atlas.service;
 
-
-import com.fnsm.atlas.dto.VolunteerCreateDto;
+import com.fnsm.atlas.dto.request.VolunteerCreateDto;
+import com.fnsm.atlas.dto.response.VolunteerDTO;
 import com.fnsm.atlas.entity.Volunteer;
+import com.fnsm.atlas.exception.DataNotFoundException;
 import com.fnsm.atlas.mapper.VolunteerMapper;
 import com.fnsm.atlas.repository.VolunteerRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,30 +17,29 @@ import java.util.Optional;
 public class VolunteerService {
 
     private final VolunteerRepository volunteerRepository;
-    private final VolunteerMapper volunteerMapper;
 
     @Autowired
-    public VolunteerService(VolunteerRepository volunteerRepository, VolunteerMapper volunteerMapper) {
+    public VolunteerService(VolunteerRepository volunteerRepository) {
         this.volunteerRepository = volunteerRepository;
-        this.volunteerMapper = volunteerMapper;
     }
 
     // Create new volunteer
-    public Volunteer createVolunteer(VolunteerCreateDto volunteerCreateDto) {
-        Volunteer volunteer = volunteerMapper.toEntity(volunteerCreateDto);
-        return volunteerRepository.save(volunteer);
+    public VolunteerDTO createVolunteer(VolunteerCreateDto volunteerCreateDto) {
+        Volunteer volunteer = VolunteerMapper.toEntity(volunteerCreateDto);
+        return VolunteerMapper.toDTO(volunteerRepository.save(volunteer));
     }
 
-    public List<Volunteer> getAllVolunteers() {
-        return volunteerRepository.findAll();
-    }
-
-    public Volunteer getVolunteerById(Long volunteerId) throws  EntityNotFoundException{
-        Optional<Volunteer> volunteer =  this.volunteerRepository.findById(volunteerId);
-        if (volunteer.isPresent()){
-            return volunteer.get();
-        }else {
-            throw new EntityNotFoundException("Volunteer not found");
+    public List<VolunteerDTO> getAllVolunteers() {
+        List<Volunteer> volunteers = volunteerRepository.findAll();
+        if (volunteers.isEmpty()) {
+            throw new DataNotFoundException("لم يتم العثور على بيانات المتطوعين", 4004L);
         }
+        return VolunteerMapper.toDTOList(volunteers);
+    }
+
+    public VolunteerDTO getVolunteerById(Long volunteerId) {
+        Volunteer volunteer = volunteerRepository.findById(volunteerId)
+                .orElseThrow(() -> new EntityNotFoundException("المتطوع غير موجود"));
+        return VolunteerMapper.toDTO(volunteer);
     }
 }

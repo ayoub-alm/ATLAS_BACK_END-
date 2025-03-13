@@ -1,17 +1,57 @@
 package com.fnsm.atlas.mapper;
 
-import com.fnsm.atlas.dto.VolunteerCreateDto;
+import com.fnsm.atlas.dto.request.VolunteerCreateDto;
+import com.fnsm.atlas.dto.response.VolunteerDTO;
+import com.fnsm.atlas.entity.City;
+import com.fnsm.atlas.entity.Region;
 import com.fnsm.atlas.entity.Volunteer;
-import org.springframework.stereotype.Component;
 
-@Component
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class VolunteerMapper {
 
-    // Map DTO to Entity
-    public Volunteer toEntity(VolunteerCreateDto dto) {
+    // Convert entity to DTO
+    public static VolunteerDTO toDTO(Volunteer volunteer) {
+        if (volunteer == null) {
+            return null;
+        }
+
+        return new VolunteerDTO(
+                volunteer.getId(),
+                volunteer.getName(),
+                volunteer.getLastName(),
+                volunteer.getBirthday(),
+                volunteer.getCin(),
+                volunteer.getEmail(),
+                volunteer.getPhone(),
+                volunteer.getAddress(),
+                volunteer.getSexId(),
+                volunteer.getBlood(),
+                volunteer.getRoleId(),
+                volunteer.getScoutGradId(),
+                volunteer.getScoutMissionId(),
+                volunteer.getSaveFromHarm(),
+                volunteer.getHealthStatus(),
+                volunteer.getSchoolDegree(),
+                volunteer.getOrganisation(),
+                volunteer.getProfession(),
+                volunteer.getInscriptionDate(),
+                volunteer.getFamilyStatus(),
+                volunteer.getCity().getName(),
+                volunteer.getRegion().getName()
+        );
+    }
+
+    // Convert DTO to entity
+    public static Volunteer toEntity(VolunteerCreateDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
         Volunteer volunteer = new Volunteer();
-        volunteer.setName(dto.name);
-        volunteer.setLastName(dto.lastName);
+        volunteer.setName(dto.getName());
+        volunteer.setLastName(dto.getLastName());
         volunteer.setBirthday(dto.getBirthday());
         volunteer.setCin(dto.getCin());
         volunteer.setEmail(dto.getEmail());
@@ -29,35 +69,14 @@ public class VolunteerMapper {
         volunteer.setProfession(dto.getProfession());
         volunteer.setInscriptionDate(dto.getInscriptionDate());
         volunteer.setFamilyStatus(dto.getFamilyStatus());
-        volunteer.setCityId(dto.getCityId());
-        volunteer.setRegionId(dto.getRegionId());
+        volunteer.setCity(City.builder().id(dto.getCityId()).build());
+        volunteer.setRegion(Region.builder().id(dto.getRegionId()).build());
+
         return volunteer;
     }
 
-    // Map Entity to DTO
-    public VolunteerCreateDto toDto(Volunteer volunteer) {
-        VolunteerCreateDto dto = new VolunteerCreateDto();
-        dto.setName(volunteer.getName());
-        dto.setLastName(volunteer.getLastName());
-        dto.setBirthday(volunteer.getBirthday());
-        dto.setCin(volunteer.getCin());
-        dto.setEmail(volunteer.getEmail());
-        dto.setPhone(volunteer.getPhone());
-        dto.setAddress(volunteer.getAddress());
-        dto.setSexId(volunteer.getSexId());
-        dto.setBlood(volunteer.getBlood());
-        dto.setRoleId(volunteer.getRoleId());
-        dto.setScoutGradId(volunteer.getScoutGradId());
-        dto.setScoutMissionId(volunteer.getScoutMissionId());
-        dto.setSaveFromHarm(volunteer.getSaveFromHarm());
-        dto.setHealthStatus(volunteer.getHealthStatus());
-        dto.setSchoolDegree(volunteer.getSchoolDegree());
-        dto.setOrganisation(volunteer.getOrganisation());
-        dto.setProfession(volunteer.getProfession());
-        dto.setInscriptionDate(volunteer.getInscriptionDate());
-        dto.setFamilyStatus(volunteer.getFamilyStatus());
-        dto.setCityId(volunteer.getCityId());
-        dto.setRegionId(volunteer.getRegionId());
-        return dto;
+    // Convert list of entities to DTOs
+    public static List<VolunteerDTO> toDTOList(List<Volunteer> volunteers) {
+        return volunteers.stream().map(VolunteerMapper::toDTO).collect(Collectors.toList());
     }
 }

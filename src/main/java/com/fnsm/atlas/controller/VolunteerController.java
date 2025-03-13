@@ -1,7 +1,7 @@
 package com.fnsm.atlas.controller;
 
-import com.fnsm.atlas.dto.VolunteerCreateDto;
-import com.fnsm.atlas.entity.Volunteer;
+import com.fnsm.atlas.dto.request.VolunteerCreateDto;
+import com.fnsm.atlas.dto.response.VolunteerDTO;
 import com.fnsm.atlas.service.VolunteerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/volunteers")
 @CrossOrigin
-public class VolunteerController  {
+public class VolunteerController {
 
     private final VolunteerService volunteerService;
 
@@ -21,23 +21,18 @@ public class VolunteerController  {
         this.volunteerService = volunteerService;
     }
 
-
-
     @GetMapping("")
-    ResponseEntity<List<Volunteer>> getAllVolunteers(){
+    ResponseEntity<List<VolunteerDTO>> getAllVolunteers() {
         return ResponseEntity.ok(volunteerService.getAllVolunteers());
     }
 
-
     @GetMapping("/{volunteerId}")
-    ResponseEntity<Volunteer> getVolunteerById(@PathVariable Long volunteerId){
-        return ResponseEntity.ok(volunteerService.getVolunteerById(volunteerId  ));
+    ResponseEntity<VolunteerDTO> getVolunteerById(@PathVariable Long volunteerId) {
+        return ResponseEntity.ok(volunteerService.getVolunteerById(volunteerId));
     }
 
-    // Endpoint to create a new volunteer
     @PostMapping("")
-    public ResponseEntity<Volunteer> createVolunteer(@RequestBody VolunteerCreateDto volunteerCreateDto) {
-        Volunteer volunteer = volunteerService.createVolunteer(volunteerCreateDto);
-        return ResponseEntity.ok(volunteer);
+    public ResponseEntity<VolunteerDTO> createVolunteer(@RequestBody VolunteerCreateDto volunteerCreateDto) {
+        return ResponseEntity.ok(volunteerService.createVolunteer(volunteerCreateDto));
     }
 }

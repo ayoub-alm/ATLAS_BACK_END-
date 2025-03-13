@@ -1,20 +1,16 @@
-package com.fnsm.atlas.entity;
+package com.fnsm.atlas.dto.response;
 
-
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Entity
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-@Builder @Getter @Setter
-public class Volunteer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@NoArgsConstructor
+public class VolunteerDTO {
     private Long id;
-
     private String name;
     private String lastName;
     private LocalDate birthday;
@@ -34,15 +30,6 @@ public class Volunteer {
     private String profession;
     private LocalDate inscriptionDate;
     private String familyStatus;
-
-
-    @ManyToOne()
-    @JoinColumn(name = "city_id")
-    private City city;
-
-    @ManyToOne()
-    @JoinColumn(name = "region_id")
-    private Region region;
-
-    // Getters and Setters
+    private String cityId;
+    private String regionId;
 }
