@@ -69,8 +69,8 @@ public class VolunteerMapper {
         volunteer.setProfession(dto.getProfession());
         volunteer.setInscriptionDate(dto.getInscriptionDate());
         volunteer.setFamilyStatus(dto.getFamilyStatus());
-        volunteer.setCity(City.builder().id(1L).build());
-        volunteer.setRegion(Region.builder().id(1L).build());
+        volunteer.setCity(City.builder().id(dto.cityId).build());
+        volunteer.setRegion(Region.builder().id(dto.regionId).build());
 
         return volunteer;
     }
